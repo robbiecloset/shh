@@ -15,6 +15,7 @@ brews:
   - repository:
       owner: robbiecloset
       name: homebrew-shh
+    folder: Formula
 
 archives:
   - format: tar.gz
