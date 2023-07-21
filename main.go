@@ -13,8 +13,6 @@ import (
 	"github.com/robbiecloset/shh/adapters"
 )
 
-var f *os.File
-
 func main() {
 	if len(os.Args[1:]) == 0 {
 		fmt.Println("provide a command to run with secrets")
@@ -42,10 +40,9 @@ type setEnvFunc func(string, string) error
 func injectSecrets(r io.Reader, getSecretValue getSecretValueFunc, setEnv setEnvFunc) error {
 	var kv []string
 	scanner := bufio.NewScanner(r)
-	fmt.Println(r)
+
 	for scanner.Scan() {
 		kv = strings.Split(scanner.Text(), "=")
-		fmt.Println(kv)
 
 		// Comment
 		if string(kv[0][0]) == "#" {
