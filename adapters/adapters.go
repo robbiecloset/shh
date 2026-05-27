@@ -34,6 +34,9 @@ func GetSecretValue(k string) (*string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fetching secret %q: %w", k, err)
 	}
+	if out.SecretString == nil {
+		return nil, fmt.Errorf("secret %q has no string value (binary secrets are not supported)", k)
+	}
 
 	return out.SecretString, nil
 }

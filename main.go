@@ -53,7 +53,7 @@ func injectSecrets(r io.Reader, getSecretValue getSecretValueFunc, setEnv setEnv
 		}
 
 		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 || parts[1] == "" {
+		if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
 			fmt.Printf("skipping malformed line: %q\n", line)
 			continue
 		}

@@ -82,6 +82,13 @@ func TestInjectSecrets(t *testing.T) {
 		assert.Empty(t, env)
 	})
 
+	t.Run("line with empty env key is skipped", func(t *testing.T) {
+		env, setEnv := collectEnv()
+		err := injectSecrets(strings.NewReader("=my/secret/id\n"), plainSecret, setEnv)
+		assert.NoError(t, err)
+		assert.Empty(t, env)
+	})
+
 	t.Run("fetch error causes skip not failure", func(t *testing.T) {
 		env, setEnv := collectEnv()
 		err := injectSecrets(strings.NewReader("FOO=my/secret/id\n"), failSecret, setEnv)
