@@ -9,8 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var secretValue string = "wooper"
-
 type dummyClient struct{}
 
 func (c dummyClient) GetSecretValue(ctx context.Context, params *secretsmanager.GetSecretValueInput, optFns ...func(*secretsmanager.Options)) (*secretsmanager.GetSecretValueOutput, error) {
@@ -20,22 +18,23 @@ func (c dummyClient) GetSecretValue(ctx context.Context, params *secretsmanager.
 		return &secretsmanager.GetSecretValueOutput{}, errors.New("failure to fetch secret")
 	}
 
+	v := "wooper"
 	return &secretsmanager.GetSecretValueOutput{
-		SecretString: &secretValue,
+		SecretString: &v,
 	}, nil
 }
 
 func TestGetSecretValue(t *testing.T) {
-	assert := assert.New(t)
 	client = dummyClient{}
+	t.Cleanup(func() { client = nil })
+
+	assert := assert.New(t)
 
 	s, err := GetSecretValue("fail")
-
 	assert.Empty(s, "string should be empty")
 	assert.NotNil(err, "error should not be nil")
 
 	s, err = GetSecretValue("something")
-
-	assert.Equal(*s, secretValue, "secret value should be returned")
+	assert.Equal("wooper", *s, "secret value should be returned")
 	assert.Nil(err, "error should be nil")
 }
